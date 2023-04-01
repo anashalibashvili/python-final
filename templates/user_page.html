@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="d-flex mt-3 align-items-center">
+        {% if user.profile.avatar %}
+            <img class="rounded-circle border border-dark" style="width: 50px; height: 50px;"
+                 src="{{ user.profile.avatar.url }}" alt="Avatar">
+        {% else %}
+            <div class="rounded-circle bg-primary d-flex justify-content-center align-items-center text-white font-bold"
+                 style="width: 50px; height: 50px; font-weight: bold; font-size: 1.5rem; user-select: none">
+                {{ user.username|first|upper }}
+            </div>
+        {% endif %}
+        <h1 class="ml-3">{{ user.username }}</h1>
+    </div>
+
+    <div class="mt-4">
+        <p>Nickname: {{ user.profile.nickname }}</p>
+
+        <h2>Questions asked by {{ user.username }}</h2>
+        <ul>
+            {% for question in questions %}
+                <li><a href="{% url 'core:question-detail' question.id %}">{{ question.title }}</a></li>
+            {% empty %}
+                <li>No questions asked yet.</li>
+            {% endfor %}
+        </ul>
+
+        <p>Number of answers given: {{  question.answer_count.all|length }}</p>
+
+        <p>Total number of views for all questions: {{ total_views }}</p>
+
+        <a class="btn btn-primary mt-3" href="{% url 'users:edit_profile' %}">
+            Edit Profile
+        </a>
+    </div>
+
+{% endblock %}

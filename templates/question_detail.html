@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if question.user == request.user %}
+    <a href="{% url 'core:question-delete' question.pk %}" class='btn btn-danger'>Delete</a>
+    <a href="{% url 'core:question-update' question.pk %}" class='btn btn-primary'>Edit</a>
+{% endif %}
+
+<h2>{{ question.title }}</h2>
+<p>{{ question.text }}</p>
+{% endblock content %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if tag %}
+        <h1>Questions with tag: {{ tag }}</h1>
+    {% else %}
+        <h1>Questions</h1>
+    {% endif %}
+    <section class="bg-transparent p-3 rounded shadow-lg" style="backdrop-filter: blur(1rem); margin-bottom: 40px">
+        <a href="{% url 'core:question-create' %}">Ask a new Question</a>
+        {% if object_list %}
+            {% for question in object_list %}
+                <article class="border-top mt-3 border-secondary">
+                    <div class="row pt-3 pb-3">
+                        <div class="col-2 d-flex flex-column text-end">
+                            <span>{{ question.vote_set.all|length }} Votes</span>
+                            <span>{{ question.answer_set.all|length }} Answers</span>
+                            <span>{{ question.view_amount.all|length }} Views</span>
+                        </div>
+                        <div class="col-10">
+                            <p><a href="{% url 'core:question-detail' question.pk %}">{{ question.title }}</a></p>
+                            <div class="d-flex flex-row justify-content-between">
+                                <div>
+                                    {% for tag in question.tags.all %}
+                                        <div class="badge bg-primary">
+                                            <a href="{% url 'core:tags' tag %}"
+                                               style="color: white; text-decoration: none">
+                                                {{ tag }}
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+
+                                </div>
+
+                                <a href="#">
+                                    {{ question.user }} asked {{ question.create_time|timesince }} ago
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+            {% if tag %}
+            {% else %}
+
+
+                <div class="pagination text-center justify-content-center">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-primary">&#10094;&#10094;</a>
+                    <a href="?page=
+                            {{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                       class="btn btn-primary">&#10094;</a>
+                {% endif %}
+
+                <span class="current btn btn-primary disabled">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page=
+                            {{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                       class="btn btn-primary">&#10095;</a>
+                    <a href="?page=
+                            {{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                       class="btn btn-primary">&#10095;&#10095;</a>
+                {% endif %}
+            </span>
+                </div>
+            {% endif %}
+        {% else %}
+            <h3>No Questions Are Available!</h3>
+        {% endif %}
+    </section>
+{% endblock content %}
